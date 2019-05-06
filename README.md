@@ -1,8 +1,10 @@
 ## run ff out of a vmvirtual arch box
 
-# install Xquartz on your local mac
+## install Xquartz on your local mac
+from here http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/
 
-# install virtualbox on your local mac
+
+## install virtualbox on your local mac
 
 # install vagrant on your local mac
 
@@ -14,7 +16,22 @@
 vagrant ssh
 ```
 
-# check you can login via openssh 
+## activate X11Forward for ssh 
+
+- from here https://unix.stackexchange.com/questions/12755/how-to-forward-x-over-ssh-to-run-graphics-applications-remotely 
+
+```bash
+# set follow setting in yor /etc/ssh/sshd_config
+X11Forwarding yes
+X11DisplayOffset 10
+```
+## restart sshd
+
+```bash
+cat /var/run/sshd.pid | sudo xargs kill -1
+```
+
+# login via opensshn in the Xquartz terminal 
 
 - you will find the informartion for the ssh login in the ouput vagarnt ssh-config
 
@@ -24,6 +41,15 @@ ssh -i <maschine private key> -X -p <maschine port> vagrant@127.0.0.1
 
 ## install docker on the virtual arch box
 
+## install xorg-xhost on the virtual arch box 
+
+```bash
+sudo pacman -S xorg-xhost
+```
+## insatt xauth
+```bash
+sudo pacman -S xorg-xauth
+```
 ## allow remote seesion in xquartz 
 
 -hint  from here - https://sourabhbajaj.com/blog/2017/02/07/gui-applications-docker-mac/ 
@@ -33,7 +59,7 @@ ssh -i <maschine private key> -X -p <maschine port> vagrant@127.0.0.1
 - rn command on virtaul box
 
 ```bash
-IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
+IP=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 echo $IP
 ``` 
 D
@@ -41,6 +67,6 @@ D
 
 ```bash
 xhost + $IP
-
+/usr/X11/bin/xhost + $IP
 ```
 	
